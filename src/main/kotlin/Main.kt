@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,21 +52,21 @@ fun LineItem(
             .padding(horizontal = grid(1.5f))
             .padding(top = grid())
             .fillMaxWidth()
-            .background(color = Color.Black)
+            .background(color = line.color)
             .clickable {}
             .padding(grid(2)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = line.nameEn,
-            color = Color.White,
+            color = line.color.getTextOnColor(),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = line.id.toString(),
-            color = Color.Black,
+            color = line.color.getTextOnColor(),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp
         )
@@ -82,3 +83,9 @@ fun grid(multiplier: Float) = dimenGrid * multiplier
 
 @Stable
 fun grid(multiplier: Int) = dimenGrid * multiplier
+
+fun Color.isDark(): Boolean = luminance() < 0.5
+
+fun Color.isLight(): Boolean = !this.isDark()
+
+fun Color.getTextOnColor() = if (this.isDark()) Color.White else Color.Black
